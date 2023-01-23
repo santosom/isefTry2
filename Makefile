@@ -8,7 +8,7 @@ loop:
 	python3 kaya_loop_audio_files.py
 
 spectrogram:
-	python3 kaya_make_spectrogram.py
+	python3 kaya_make_spectrogram.py audio/1_4.wav
 
 samples_count:
 	ls -1 audio  | wc -l

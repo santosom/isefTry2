@@ -23,15 +23,31 @@ if not os.path.exists(file):
 
 filename = os.path.basename(file)
 
-def createSpectrogram(filename, file):
+def createAmplatudeSpectrogram(filename, file):
     y, sr = librosa.load(file)
     plt.figure(figsize=(14, 5))
     librosa.display.specshow(librosa.amplitude_to_db(librosa.stft(y), ref=np.max), y_axis='log', x_axis='time')
     plt.colorbar(format='%+2.0f dB')
     # plt.title('Power spectrogram')
+    # hide the legend
+    # hide the x axis
+    # hide the y axis
     plt.tight_layout()
-    plt.savefig('spectrograms/' + filename + '.png')
+    plt.savefig('spectrograms/' + filename + '_amp.png')
+
+def createPowerSpectrogram(filename, file):
+    y, sr = librosa.load(file)
+    plt.figure(figsize=(14, 5))
+    librosa.display.specshow(librosa.power_to_db(librosa.stft(y), ref=np.max), y_axis='log', x_axis='time')
+    plt.colorbar(format='%+2.0f dB')
+    # plt.title('Power spectrogram')
+    # hide the legend
+    # hide the x axis
+    # hide the y axis
+    plt.tight_layout()
+    plt.savefig('spectrograms/' + filename + '_power.png')
 
 # make a spectrogram image of the audio file
 # import the necessary packages
-createSpectrogram(filename, file)
+createAmplatudeSpectrogram(filename, file)
+createPowerSpectrogram(filename, file)

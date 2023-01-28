@@ -15,10 +15,7 @@ from matplotlib import pyplot as plt
 from glob import glob
 
 #sample for loading in .wav files
-filename = "audio/0_1fixed.wav"
 fs, wav = wavfile.read(filename)
 print(fs)
-plt.plot(wav)
-plt.show(block=True)
-plt.interactive(False)
-print("done :)!")
+
+y, sr = librosa.load(librosa.ex(filename))

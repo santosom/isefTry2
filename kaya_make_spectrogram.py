@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import numpy as np
+import sys
 
 # get a command line argument
 
@@ -22,6 +23,18 @@ if not os.path.exists(file):
     print('File does not exist')
 
 filename = os.path.basename(file)
+
+# print the file argument and exit
+print('File: ' + file)
+print('Filename: ' + filename)
+
+# take the file argument and get rid of the ending after the last period
+relativePath = file.split('.')[0]
+# replace slashes with undercores in the relative path
+relativePath = relativePath.replace('/', '_')
+print ('Relative Path: ' + relativePath)
+
+# sys.exit(0)
 
 def createAmplatudeSpectrogram(filename, file):
     y, sr = librosa.load(file)
@@ -49,5 +62,5 @@ def createPowerSpectrogram(filename, file):
 
 # make a spectrogram image of the audio file
 # import the necessary packages
-createAmplatudeSpectrogram(filename, file)
-createPowerSpectrogram(filename, file)
+createAmplatudeSpectrogram(relativePath, file)
+# createPowerSpectrogram(relativePath, file)

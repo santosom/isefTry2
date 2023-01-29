@@ -5,10 +5,12 @@ kaya:
 	python3 main_kaya.py
 
 loop:
+	rm -rf spectrograms
+	mkdir spectrograms
 	python3 kaya_loop_audio_files.py
 
 spectrogram:
-	python3 kaya_make_spectrogram.py audio/1_4.wav
+	python3 kaya_make_spectrogram.py audio/emergency_alarms/sound_1.wav
 
 samples_count:
 	ls -1 audio  | wc -l

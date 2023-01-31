@@ -9,13 +9,12 @@ import numpy as np
 import librosa
 from pathlib import Path
 from scipy.io import wavfile
+from sklearn.model_selection import KFold
 from matplotlib import pyplot as plt
 
 """glob comes with python installed, so you don't need to install it specifically using pip install or in the python interpreter tab"""
 from glob import glob
 
-#sample for loading in .wav files
-fs, wav = wavfile.read(filename)
-print(fs)
-
-y, sr = librosa.load(librosa.ex(filename))
+print("hello pippin")
+imageheight, imagewidth = 400, 500
+#use k-fold valiadation to split the training set up!

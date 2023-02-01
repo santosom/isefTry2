@@ -3,6 +3,7 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.layers import Dense,Dropout,Activation,Flatten
 
 import pandas as pd
 import numpy as np
@@ -11,6 +12,7 @@ from pathlib import Path
 from scipy.io import wavfile
 from sklearn.model_selection import KFold
 from matplotlib import pyplot as plt
+
 
 """glob comes with python installed, so you don't need to install it specifically using pip install or in the python interpreter tab"""
 from glob import glob
@@ -29,6 +31,13 @@ labelledAmbulanceData = tf.data.Dataset.zip((ambulanceData, tf.data.Dataset.from
 allLabelledDatasets = [labelledSnoringData, labelledAmbulanceData]
 #congegate all datasets together, note maybe create a for-loop when using more than 2 datasets. this is going to get annoying
 ultimateDataset = labelledSnoringData.concatenate(labelledAmbulanceData)
-
-print("hello pippin")
+print("dataset type: ", type(ultimateDataset))
 #use k-fold valiadation to split the training set up!
+#make model (woah)
+model = Sequential()
+model.add(keras.layers.Dense(64, activation='relu'))
+model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
+model.add(keras.layers.Dropout(0.2))
+model.add(keras.layers.BatchNormalization())
+model.add(keras.layers.Dense(128, activation='relu'))
+print("hello pippin")

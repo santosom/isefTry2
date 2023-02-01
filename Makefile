@@ -15,5 +15,8 @@ spectrogram:
 samples_count:
 	ls -1 audio  | wc -l
 
+train:
+	python3 kaya_train.py
+
 samples_size:
 	du -h audio

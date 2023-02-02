@@ -18,7 +18,7 @@ from matplotlib import pyplot as plt
 from glob import glob
 
 
-imageheight, imagewidth = 400, 500
+imageheight, imagewidth = 1400, 500
 snoringFilePath = 'spectrograms/snoringNoises'
 ambulanceFilePath = 'spectrograms/emergencyNoises'
 
@@ -27,7 +27,7 @@ ambulanceData = tf.data.Dataset.list_files(ambulanceFilePath)
 #label snoring data by creating another tensor filled entirely with "0", to the proportion of snoringdata, and slapping (zipping) it together
 #Currently, snoring's label is 0, ambulance's label is 1 (update as needed)
 labelledSnoringData= tf.data.Dataset.zip((snoringData, tf.data.Dataset.from_tensor_slices(tf.fill(len(snoringData), 0)) ))
-labelledAmbulanceData = tf.data.Dataset.zip((ambulanceData, tf.data.Dataset.from_tensor_slices(tf.fill(len(snoringData), 1)) ))
+labelledAmbulanceData = tf.data.Dataset.zip((ambulanceData, tf.data.Dataset.from_tensor_slices(tf.fill(len(ambulanceData), 1)) ))
 allLabelledDatasets = [labelledSnoringData, labelledAmbulanceData]
 #congegate all datasets together, note maybe create a for-loop when using more than 2 datasets. this is going to get annoying
 ultimateDataset = labelledSnoringData.concatenate(labelledAmbulanceData)
@@ -40,4 +40,7 @@ model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
 model.add(keras.layers.Dropout(0.2))
 model.add(keras.layers.BatchNormalization())
 model.add(keras.layers.Dense(128, activation='relu'))
+model.build(((len(ambulanceData)+len(snoringData)), imageheight, imagewidth, 3))
+print(model.summary())
 print("hello pippin")
+

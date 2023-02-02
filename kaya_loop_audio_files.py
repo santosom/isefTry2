@@ -40,3 +40,4 @@ def generateForFiles(path):
 
 generateForFiles('audio/emergency_alarms')
 generateForFiles('audio/snoring')
+

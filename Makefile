@@ -20,3 +20,6 @@ train:
 
 samples_size:
 	du -h audio
+
+nn:
+	python3 cnn.py

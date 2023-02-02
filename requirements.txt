@@ -5,3 +5,9 @@ numpy
 librosa
 matplotlib
 keras
+torch
+torchvision
+IPython
+tqdm
+IProgress
+ipywidgets

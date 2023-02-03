@@ -11,3 +11,5 @@ IPython
 tqdm
 IProgress
 ipywidgets
+keras
+data

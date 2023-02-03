@@ -23,3 +23,7 @@ samples_size:
 
 nn:
 	python3 cnn.py
+	open results.png
+
+main:
+	python3 main.py

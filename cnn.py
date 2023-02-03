@@ -95,14 +95,7 @@ class music_net(nn.Module):
     self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1, padding=0)
     self.conv4 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=0)
     self.conv5 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=0)
-    #   (((W - K + 2P)/S) + 1)
-    #     Here W = Input size
-    #     K = Filter size
-    #     S = Stride
-    #     P = Padding
-    #
-    # RARK!!! This is currently failing because the numbers are wrong!
-    self.fc1 = nn.Linear(in_features=9856, out_features=10)
+    self.fc1 = nn.Linear(in_features=68224, out_features=4)
 
     self.batchnorm1 = nn.BatchNorm2d(num_features=8)
     self.batchnorm2 = nn.BatchNorm2d(num_features=16)
@@ -147,6 +140,8 @@ class music_net(nn.Module):
     # Fully connected layer 1.
     x = torch.flatten(x, 1)
     x = self.dropout(x)
+    # NOTE: print the matrix size and use it in the fc1 layer
+    print(x.size())
     x = self.fc1(x)
     x = F.softmax(x)
 
@@ -215,23 +210,50 @@ def train(model, train_loader, validation_loader, epochs):
 
   return train_loss, train_acc, validation_loss, validation_acc
 
-def plot_loss_accuracy(history):
-  # Plot the loss and accuracy curves for training and validation
-  fig, ax = plt.subplots(2, 1)
-  ax[0].plot(history.history['loss'], color='b', label="Training loss")
-  ax[0].plot(history.history['val_loss'], color='r', label="validation loss", axes=ax[0])
-  legend = ax[0].legend(loc='best', shadow=True)
-
-  ax[1].plot(history.history['accuracy'], color='b', label="Training accuracy")
-  ax[1].plot(history.history['val_accuracy'], color='r', label="Validation accuracy")
-  legend = ax[1].legend(loc='best', shadow=True)
-
 # Step 3 - Run training.
 
 net = music_net()
-train_loss, train_acc, validation_loss, validation_acc = train(net, train_loader, val_loader, 50)
-
-# Detach tensors from GPU
-plot_loss_accuracy(train_loss, train_acc, validation_loss, validation_acc)
+## was 50 epochs
+train_loss, train_acc, validation_loss, validation_acc = train(net, train_loader, val_loader, 10)
 
 print ("Training accuracy: ", train_acc[-1])
+
+def plot_loss_accuracy(train_loss, train_acc,
+                       validation_loss, validation_acc):
+  """
+  Code to plot loss and accuracy
+
+  Args:
+    train_loss: list
+      Log of training loss
+    validation_loss: list
+      Log of validation loss
+    train_acc: list
+      Log of training accuracy
+    validation_acc: list
+      Log of validation accuracy
+
+  Returns:
+    Nothing
+  """
+  epochs = len(train_loss)
+  fig, (ax1, ax2) = plt.subplots(1, 2)
+  ax1.plot(list(range(epochs)), train_loss, label='Training Loss')
+  ax1.plot(list(range(epochs)), validation_loss, label='Validation Loss')
+  ax1.set_xlabel('Epochs')
+  ax1.set_ylabel('Loss')
+  ax1.set_title('Epoch vs Loss')
+  ax1.legend()
+
+  ax2.plot(list(range(epochs)), train_acc, label='Training Accuracy')
+  ax2.plot(list(range(epochs)), validation_acc, label='Validation Accuracy')
+  ax2.set_xlabel('Epochs')
+  ax2.set_ylabel('Accuracy')
+  ax2.set_title('Epoch vs Accuracy')
+  ax2.legend()
+  fig.set_size_inches(15.5, 5.5)
+  fig.savefig('results.png')
+
+# Detach tensors from GPU
+with plt.xkcd():
+  plot_loss_accuracy(train_loss, train_acc, validation_loss, validation_acc)

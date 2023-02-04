@@ -27,3 +27,6 @@ nn:
 
 main:
 	python3 main.py
+
+keras_model:
+	python3 keras_model.py

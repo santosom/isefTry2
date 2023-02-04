@@ -3,7 +3,7 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.layers import Dense,Dropout,Activation,Flatten
+from tensorflow.keras.layers import Dense,Dropout,Activation,Flatten,Conv2D
 from keras.optimizers import SGD
 
 import pandas as pd
@@ -28,6 +28,7 @@ allLabelledDatasets = [labelledSnoringData, labelledAmbulanceData]
 #congegate all datasets together, note maybe create a for-loop when using more than 2 datasets. this is going to get annoying
 ultimateDataset = labelledSnoringData.concatenate(labelledAmbulanceData)
 print("dataset type: ", type(ultimateDataset))
+
 #TODO: implement something to split up training and testing sets. I'm not sure if k-fold validation applies here but I'd like to use it somewhere
 
 ultimateDataset.shuffle(3, seed=None, reshuffle_each_iteration=False)
@@ -42,6 +43,7 @@ print("dataset split into validation, training, and testing")
 #make model (woah)
 model = Sequential()
 #first layer
+model.add(Conv2D(16, (3,3), activation='relu', input_shape=(1491, 257, 1)))
 model.add(keras.layers.Dense(64, activation='relu'))
 model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
 model.add(keras.layers.Dropout(0.2))
@@ -57,8 +59,9 @@ optimizer = keras.optimizers.SGD(learning_rate=0.01, momentum=0.1, nesterov=Fals
 print("model layers optimizer defined")
 model.compile(optimizer, loss='BinaryCrossentropy', metrics=[tf.keras.metrics.Recall(), tf.keras.metrics.Precision()])
 print("model successfully complied")
+
 model.fit(
-    tf.expand_dims(ultimateDataset, axis=-1),
+    x=ultimateDataset,
     y=None,
     batch_size=3,
     epochs=5,

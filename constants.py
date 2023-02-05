@@ -7,7 +7,7 @@ ambulanceFilePath = 'test_spectrograms/alarm/*png'
 snoringData = tf.data.Dataset.list_files(snoringFilePath)
 ambulanceData = tf.data.Dataset.list_files(ambulanceFilePath)
 
-image_size = (180, 180)
+image_size = (1400, 500)
 batch_size = 128
 
 train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(

@@ -13,3 +13,5 @@ IProgress
 ipywidgets
 keras
 data
+pydot
+

@@ -30,3 +30,6 @@ main:
 
 keras_model:
 	python3 keras_model.py
+
+pydot:
+	pip install pydot

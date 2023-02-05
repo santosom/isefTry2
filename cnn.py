@@ -43,9 +43,9 @@ for g in genres:
   ## TODO: I'm using 1 image for testing, 1 for validation, and the rest for training. You can change this when
   ## you have more images.
   ##
-  test_files = src_file_paths[0:1]
-  val_files = src_file_paths[1:2]
-  train_files = src_file_paths[2:]
+  test_files = src_file_paths[0:10]
+  val_files = src_file_paths[10:20]
+  train_files = src_file_paths[20:]
 
   #  make destination folders for train and test images
   for f in folder_names:

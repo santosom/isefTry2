@@ -19,8 +19,8 @@ train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     batch_size=batch_size,
 )
 
-print ("test data: ")
-print (train_ds)
+# print ("test data: ")
+# print (train_ds)
 
 import matplotlib.pyplot as plt
 

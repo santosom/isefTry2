@@ -24,16 +24,24 @@ ambulanceData = constants.ambulanceData
 model = Sequential()
 #first layer
 model.add(Conv2D(16, (3,3), activation='relu', input_shape=(1400, 500, 3)))
-model.add(keras.layers.Dense(64, activation='relu'))
-# model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
-# model.add(keras.layers.Dropout(0.2))
-# model.add(keras.layers.BatchNormalization())
-# #second layer
-# model.add(keras.layers.Dense(128, activation='relu'))
-# model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
-# model.add(keras.layers.Dropout(0.2))
-# model.add(keras.layers.BatchNormalization())
-# print("model layers defined")
+model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
+model.add(Dense(64))
+model.add(keras.layers.Dropout(0.2))
+model.add(keras.layers.BatchNormalization())
+#second layer
+model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
+model.add(Dense(128))
+model.add(keras.layers.Dropout(0.2))
+model.add(keras.layers.BatchNormalization())
+#third layer
+model.add(keras.layers.MaxPooling2D(pool_size=(3, 3)))
+model.add(keras.layers.Dropout(0.2))
+model.add(keras.layers.BatchNormalization())
+#fourth layer
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dropout(0.5))
+model.add(Activation('softmax'))
+print("model layers defined")
 optimizer = keras.optimizers.SGD(learning_rate=0.01, momentum=0.1, nesterov=False)
 # print("model layers optimizer defined")
 model.compile(optimizer, loss='BinaryCrossentropy', metrics=[tf.keras.metrics.Recall(), tf.keras.metrics.Precision()])
@@ -94,12 +102,16 @@ model = make_model(input_shape=constants.image_size + (3,), num_classes=2)
 
 model.compile(
     optimizer=keras.optimizers.Adam(1e-3),
-    loss="binary_crossentropy",
+    loss="categorical_crossentropy",
     metrics=["accuracy"],
 )
 
-model.fit(
+m = model.fit(
     constants.train_ds,
+    batch_size=3,
+    epochs=5,
+    verbose=1,
+    validation_data=constants.val_ds
 )
     # x=constants.train_ds,
     # y=None,
@@ -109,8 +121,24 @@ model.fit(
     # validation_data=constants.val_ds)
 print("model fit completed")
 model.build(((constants.entireLen()), imageheight, imagewidth, 3))
-print(model.summary())
 print("model build completed")
+print("history keys:", m.history.keys())
+#from https://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
+plt.plot(m.history['accuracy'])
+plt.plot(m.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(m.history['loss'])
+plt.plot(m.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
 #TODO: make sure input shape is correct
 print("hello pippin")
 

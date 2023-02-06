@@ -8,7 +8,7 @@ snoringData = tf.data.Dataset.list_files(snoringFilePath)
 ambulanceData = tf.data.Dataset.list_files(ambulanceFilePath)
 
 image_size = (1400, 500)
-batch_size = 128
+batch_size = 2
 
 train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     "test_spectrograms",
@@ -28,13 +28,12 @@ plt.figure(figsize=(10, 10))
 for images, labels in train_ds.take(1):
     print (labels)
     print (images)
-    for i in range(4):
-        print (images[i])
-        ax = plt.subplot(3, 3, i + 1)
-        plt.imshow(images[i].numpy().astype("uint8"))
-        plt.title(int(labels[i]))
-        plt.axis("off")
-        plt.savefig('all.png')
+    # for i in range(4):
+    #     ax = plt.subplot(3, 3, i + 1)
+    #     plt.imshow(images[i].numpy().astype("uint8"))
+    #     plt.title(int(labels[i]))
+    #     plt.axis("off")
+    #     plt.savefig('all.png')
 
 print ("done")
 

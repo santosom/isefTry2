@@ -43,9 +43,9 @@ for g in genres:
   ## TODO: I'm using 1 image for testing, 1 for validation, and the rest for training. You can change this when
   ## you have more images.
   ##
-  test_files = src_file_paths[0:10]
-  val_files = src_file_paths[10:20]
-  train_files = src_file_paths[20:30]
+  test_files = src_file_paths[0:1]
+  val_files = src_file_paths[1:2]
+  train_files = src_file_paths[2:]
 
   #  make destination folders for train and test images
   for f in folder_names:
@@ -107,35 +107,36 @@ class music_net(nn.Module):
 
 
   def forward(self, x):
-    # Conv layer 1.
+
+    #Conv layer 1
     x = self.conv1(x)
+    x = F.relu(x)
+    x = F.max_pool2d(x, kernel_size=2)
     x = self.batchnorm1(x)
-    x = F.relu(x)
-    x = F.max_pool2d(x, kernel_size=2)
 
-    # Conv layer 2.
+    #Conv layer 2
     x = self.conv2(x)
+    x = F.relu(x)
+    x = F.max_pool2d(x, kernel_size=2)
     x = self.batchnorm2(x)
-    x = F.relu(x)
-    x = F.max_pool2d(x, kernel_size=2)
 
-    # Conv layer 3.
+    #Conv layer 3
     x = self.conv3(x)
+    x = F.relu(x)
+    x = F.max_pool2d(x, kernel_size=2)
     x = self.batchnorm3(x)
-    x = F.relu(x)
-    x = F.max_pool2d(x, kernel_size=2)
 
-    # Conv layer 4.
+    #Conv layer 4
     x = self.conv4(x)
+    x = F.relu(x)
+    x = F.max_pool2d(x, kernel_size=2)
     x = self.batchnorm4(x)
-    x = F.relu(x)
-    x = F.max_pool2d(x, kernel_size=2)
 
-    # Conv layer 5.
+    #Conv layer 5
     x = self.conv5(x)
-    x = self.batchnorm5(x)
     x = F.relu(x)
     x = F.max_pool2d(x, kernel_size=2)
+    x = self.batchnorm5(x)
 
     # Fully connected layer 1.
     x = torch.flatten(x, 1)
@@ -214,28 +215,13 @@ def train(model, train_loader, validation_loader, epochs):
 
 net = music_net()
 ## was 50 epochs
-train_loss, train_acc, validation_loss, validation_acc = train(net, train_loader, val_loader, 10)
+train_loss, train_acc, validation_loss, validation_acc = train(net, train_loader, val_loader, 50)
 
 print ("Training accuracy: ", train_acc[-1])
 
 def plot_loss_accuracy(train_loss, train_acc,
                        validation_loss, validation_acc):
-  """
-  Code to plot loss and accuracy
 
-  Args:
-    train_loss: list
-      Log of training loss
-    validation_loss: list
-      Log of validation loss
-    train_acc: list
-      Log of training accuracy
-    validation_acc: list
-      Log of validation accuracy
-
-  Returns:
-    Nothing
-  """
   epochs = len(train_loss)
   fig, (ax1, ax2) = plt.subplots(1, 2)
   ax1.plot(list(range(epochs)), train_loss, label='Training Loss')
@@ -253,6 +239,7 @@ def plot_loss_accuracy(train_loss, train_acc,
   ax2.legend()
   fig.set_size_inches(15.5, 5.5)
   fig.savefig('results.png')
+  print("done!")
 
 # Detach tensors from GPU
 with plt.xkcd():

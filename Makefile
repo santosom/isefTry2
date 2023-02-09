@@ -5,8 +5,8 @@ kaya:
 	python3 main_kaya.py
 
 loop:
-	rm -rf spectrograms
-	mkdir spectrograms
+	#rm -rf spectrograms
+	#mkdir spectrograms
 	python3 kaya_loop_audio_files.py
 
 spectrogram:

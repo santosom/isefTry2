@@ -133,6 +133,7 @@ model.compile(
 
 model.fit(
     constants.train_ds,
+    batch_size=3,
 )
     # x=constants.train_ds,
     # y=None,

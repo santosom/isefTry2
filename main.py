@@ -4,6 +4,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense,Dropout,Activation,Flatten,Conv2D, Dense, MaxPooling2D
 from keras.optimizers import Adam
+from tensorflow.keras.datasets import mnist
 
 import pandas as pd
 import numpy as np
@@ -18,10 +19,14 @@ import constants
 imageheight, imagewidth = 1400, 500
 snoringData = constants.snoringData
 ambulanceData = constants.ambulanceData
+(X_train, Y_train), (X_test, Y_test) = mnist.load_data()
+print("test shape = ", constants.train_ds.shape())
+
+x_shape = 0, 28, 28
 input_shape = (1400, 500, 3)
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = input_shape))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = (28, 28, 1)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
@@ -33,11 +38,13 @@ model.summary()
 print("model layers defined")
 optimizer = keras.optimizers.Adam(learning_rate=0.01)
 # # print("model layers optimizer defined")
-model.compile(optimizer, loss='binary_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
+model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
 # print("model successfully complied")
 
 m = model.fit(
-    constants.train_ds,
+    # constants.train_ds,
+    X_train,
+    Y_train,
     batch_size=3,
     epochs=5,
     verbose=1,

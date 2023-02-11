@@ -25,9 +25,9 @@ def createSpectrogram(filename, filepath):
     plt.savefig('spectrograms/' + filename + '.png')
     print("Wrote image spectrograms/" + filename + '.png')
     # create the spectrogram as a numpy array
-    spectrogram = librosa.amplitude_to_db(librosa.stft(y), ref=np.max)
-    np.save('spectrograms/' + filename + '.npy', spectrogram)
-    print("Wrote numpy spectrograms/" + filename + '.npy')
+    #spectrogram = librosa.amplitude_to_db(librosa.stft(y), ref=np.max)
+    #np.save('spectrograms/' + filename + '.npy', spectrogram)
+    #print("Wrote numpy spectrograms/" + filename + '.npy')
 
 def generateForFiles(path):
     files = os.listdir(path)

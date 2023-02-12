@@ -43,6 +43,6 @@ def generateForFiles(path):
         filename = filename[6:] # removing the audio_ part
         createSpectrogram(filename, path + '/' + file)
 
-generateForFiles('audio/emergency_alarms')
+#generateForFiles('audio/emergency_alarms')
 # generateForFiles('audio/snoring')
-
+generateForFiles('audio/Fire')

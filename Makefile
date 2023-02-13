@@ -12,6 +12,12 @@ loop:
 spectrogram:
 	python3 kaya_make_spectrogram.py audio/emergency_alarms/sound_1.wav
 
+postprocess:
+	python3 post_process.py
+
+importdata:
+	python3 import_dataset.py
+
 samples_count:
 	ls -1 audio  | wc -l
 

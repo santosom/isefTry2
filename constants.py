@@ -2,16 +2,18 @@ import numpy as np
 import tensorflow as tf
 
 #change this back to actual spectrograms
-snoringFilePath = 'test_spectrograms/snoring/*png'
-ambulanceFilePath = 'test_spectrograms/alarm/*png'
+snoringFilePath = 'final_spectrograms/snoringNoises/*png'
+ambulanceFilePath = 'final_spectrograms/emergencyNoises/*png'
+# fireFilePath = 'final_spectrograms/fireNoises/*png'
 snoringData = tf.data.Dataset.list_files(snoringFilePath)
 ambulanceData = tf.data.Dataset.list_files(ambulanceFilePath)
+# fireData = tf.data.Dataset.list_files(fireFilePath)
 
-image_size = (1400, 500)
+image_size = (865, 385)
 batch_size = 2
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
-    "test_spectrograms",
+    "final_spectrograms",
     validation_split=0.2,
     subset="training",
     seed=1337,
@@ -20,7 +22,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
 )
 
 val_ds = tf.keras.utils.image_dataset_from_directory(
-    "test_spectrograms",
+    "final_spectrograms",
     validation_split=0.2,
     subset="validation",
     seed=1337,
@@ -49,12 +51,18 @@ print ("done")
 
 snoringLen = len(snoringData)
 ambulanceLen = len(ambulanceData)
+# fireLen = len(fireData)
 
 def entireLen():
-    return snoringLen+ambulanceLen
+    return snoringLen+ambulanceLen #+fireLen
 
 #ratios
 #https://stackoverflow.com/questions/51125266/how-do-i-split-tensorflow-datasets
 trainingLen = round(entireLen()*.7)
 validationLen = round(entireLen()*.15)
 testingLen = round(entireLen()*.15)
+
+# print out training, validation and testing
+print ("training: ", trainingLen)
+print ("validation: ", validationLen)
+print ("testing: ", testingLen)

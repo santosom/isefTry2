@@ -1,3 +1,5 @@
+import os
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
@@ -16,13 +18,13 @@ from matplotlib import pyplot as plt
 
 import constants
 
-image_size = (1400, 500)
-imageheight, imagewidth = 1400, 500
+image_size = constants.image_size
+imageheight, imagewidth = image_size[1], image_size[0]
 batch_size = 2
 print("hello mushy")
 
 train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
-    "test_spectrograms",
+    "final_spectrograms",
     label_mode="categorical",
     validation_split=0.2,
     subset="both",
@@ -40,8 +42,9 @@ print("class names are ", train_ds.class_names)
 print ("x_train shape before messing with stuff:", train_ds)
 print (len(train_ds), "train samples")
 print (len(val_ds), "test samples")
+
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = (1400, 500, 3)))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = (imagewidth, imageheight, 3)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
@@ -60,6 +63,10 @@ print("model successfully complied")
 
 m = model.fit(train_ds, batch_size = 3, epochs = 2, verbose = 1, validation_data = val_ds)
 
+# #TODO: make sure input shape is correct
+if not os.path.exists("results"):
+    os.makedirs("results")
+
 print("model fit completed")
 plt.plot(m.history['accuracy'])
 plt.plot(m.history['val_accuracy'])
@@ -67,7 +74,8 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
-plt.show()
+plt.savefig("results/accuracy.png")
+
 # summarize history for loss
 plt.plot(m.history['loss'])
 plt.plot(m.history['val_loss'])
@@ -75,7 +83,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
-plt.show()
-# #TODO: make sure input shape is correct
-# print("hello pippin")
+# write the plt to a results folder
+# make the results folder if needed
+plt.savefig("results/loss.png")
 print("hello pippin")

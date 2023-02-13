@@ -50,17 +50,14 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dense(64, activation="relu"))
 model.add(Flatten())
 model.add(Dense(32, activation="relu"))
-model.add(Dense(2, activation = 'softmax'))
+model.add(Dense(3, activation = 'softmax'))
 model.summary()
 print("model layers defined")
 optimizer = keras.optimizers.Adam(learning_rate=0.01)
 print("model layers optimizer defined")
-model.compile(optimizer, loss='binary_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
-print("model successfully complied")
-model.compile(optimizer, loss='binary_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
+model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
 print("model successfully complied")
 
-model.fit(train_ds, batch_size = 3, epochs = 5, verbose = 1)
 m = model.fit(train_ds, batch_size = 3, epochs = 2, verbose = 1, validation_data = val_ds)
 
 print("model fit completed")

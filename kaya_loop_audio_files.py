@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import numpy as np
+from pydub import AudioSegment
+from pydub.playback import play
 
 
 def createSpectrogram(filename, filepath):
@@ -45,4 +47,18 @@ def generateForFiles(path):
 
 #generateForFiles('audio/emergency_alarms')
 # generateForFiles('audio/snoring')
-generateForFiles('audio/Fire')
+#generateForFiles('audio/Fire')
+
+#from: https://stackoverflow.com/questions/63968492/convert-ogg-audio-to-wav-in-python-without-ffmpeg
+def ogg2wav(OGGfile, whereToSave):
+    wavFile = OGGfile.replace('.ogg','.wav')
+    newFile = AudioSegment.from_file(OGGfile)
+    newFile.export(whereToSave, format='wav')
+
+def ohLotsOfOGG(path, type):
+    whereToSave = 'audio/' + type
+    files = os.listdir(path)
+    for file in files:
+        filename = path + file
+        ogg2wav(file, whereToSave)
+

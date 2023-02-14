@@ -48,18 +48,4 @@ def generateForFiles(path):
 #generateForFiles('audio/emergency_alarms')
 # generateForFiles('audio/snoring')
 #generateForFiles('audio/Fire')
-
-#from: https://stackoverflow.com/questions/63968492/convert-ogg-audio-to-wav-in-python-without-ffmpeg
-def ogg2wav(OGGfile, whereToSave):
-    wavFile = OGGfile.replace('.ogg','.wav')
-    newFile = AudioSegment.from_file(OGGfile)
-    newFile.export(whereToSave, format='wav')
-
-def ohLotsOfOGG(path, type):
-    whereToSave = 'audio/' + type
-    files = os.listdir(path)
-    for file in files:
-        filename = path + file
-        ogg2wav(file, whereToSave)
-
-ohLotsOfOGG('OGGVersions/glassBreak', 'glass')
+generateForFiles('audio/pouring_water')

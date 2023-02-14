@@ -26,9 +26,9 @@ for folder in os.listdir("spectrograms"):
         # save the image
         # reduce the number of colors in the image to 256
         img = img.quantize(256)
+        # use grayscale
+        img = img.convert('L')
         img.save(outputfolder + "/" + folder + "/" + file)
         # print out the file name
         print(folder + "/" + file)
 
-        # use grayscale
-        # img = img.convert('L')

@@ -1,13 +1,25 @@
+import os
 import numpy as np
 import tensorflow as tf
 
-#change this back to actual spectrograms
-snoringFilePath = 'final_spectrograms/snoringNoises/*png'
-ambulanceFilePath = 'final_spectrograms/emergencyNoises/*png'
-# fireFilePath = 'final_spectrograms/fireNoises/*png'
-snoringData = tf.data.Dataset.list_files(snoringFilePath)
-ambulanceData = tf.data.Dataset.list_files(ambulanceFilePath)
-# fireData = tf.data.Dataset.list_files(fireFilePath)
+
+# foreach folder and file in final_spectrograms
+#     open the file
+#     convert the file to a tensor
+#     add the tensor to the dataset
+fileCount = 0
+for folder in os.listdir("final_spectrograms"):
+    # loop over the files in the folder
+    # skip any file that is not a folder
+    if not os.path.isdir("final_spectrograms/" + folder):
+        continue
+    for file in os.listdir("final_spectrograms/" + folder):
+        # skip any file that is not a png
+        if not file.endswith(".png"):
+            continue
+        fileCount += 1
+
+print ("file count: ", fileCount)
 
 image_size = (865, 385)
 batch_size = 2
@@ -49,12 +61,8 @@ plt.figure(figsize=(10, 10))
 
 print ("done")
 
-snoringLen = len(snoringData)
-ambulanceLen = len(ambulanceData)
-# fireLen = len(fireData)
-
 def entireLen():
-    return snoringLen+ambulanceLen #+fireLen
+    return fileCount
 
 #ratios
 #https://stackoverflow.com/questions/51125266/how-do-i-split-tensorflow-datasets

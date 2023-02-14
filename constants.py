@@ -3,13 +3,8 @@ import numpy as np
 import tensorflow as tf
 
 
-# foreach folder and file in final_spectrograms
-#     open the file
-#     convert the file to a tensor
-#     add the tensor to the dataset
 fileCount = 0
 for folder in os.listdir("final_spectrograms"):
-    # loop over the files in the folder
     # skip any file that is not a folder
     if not os.path.isdir("final_spectrograms/" + folder):
         continue

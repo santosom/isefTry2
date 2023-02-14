@@ -51,6 +51,14 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dense(64, activation="relu"))
 model.add(Flatten())
 model.add(Dense(32, activation="relu"))
@@ -92,5 +100,7 @@ plt.legend(['training loss', 'validation loss'], loc='upper left')
 # write the plt to a results folder
 # make the results folder if needed
 plt.savefig("results/loss.png")
+
+model.save("results/model.h5")
 
 print("hello pippin")

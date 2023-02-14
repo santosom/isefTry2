@@ -31,11 +31,12 @@ train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     seed=1337,
     image_size=image_size,
     batch_size=batch_size,
+    color_mode="grayscale",
 )
 
-for images, labels in train_ds.take(1):
-    print (labels)
-    print (images)
+# for images, labels in train_ds.take(1):
+#     print (labels)
+#     print (images)
 
 print("training stuff defined")
 print("class names are ", train_ds.class_names)
@@ -44,7 +45,7 @@ print (len(train_ds), "train samples")
 print (len(val_ds), "test samples")
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = (imagewidth, imageheight, 3)))
+model.add(Conv2D(32, (3, 3), padding="same", activation="relu", input_shape = (imagewidth, imageheight, 1)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
@@ -53,7 +54,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dense(64, activation="relu"))
 model.add(Flatten())
 model.add(Dense(32, activation="relu"))
-model.add(Dense(3,  activation = 'softmax'))
+model.add(Dense(constants.classesCount,  activation = 'softmax'))
 model.summary()
 print("model layers defined")
 optimizer = keras.optimizers.Adam(learning_rate=0.01)
@@ -61,29 +62,35 @@ print("model layers optimizer defined")
 model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
 print("model successfully complied")
 
-m = model.fit(train_ds, batch_size = 3, epochs = 2, verbose = 1, validation_data = val_ds)
+m = model.fit(train_ds, batch_size = 3, epochs = 4, verbose = 1, validation_data = val_ds)
 
 # #TODO: make sure input shape is correct
 if not os.path.exists("results"):
     os.makedirs("results")
 
 print("model fit completed")
+plt.figure(1)
 plt.plot(m.history['accuracy'])
 plt.plot(m.history['val_accuracy'])
 plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
+plt.legend(['training accuracy', 'validation accuracy'], loc='upper left')
 plt.savefig("results/accuracy.png")
 
+# print the m history files
+print(m.history)
+
 # summarize history for loss
+plt.figure(2)
 plt.plot(m.history['loss'])
 plt.plot(m.history['val_loss'])
 plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
+plt.legend(['training loss', 'validation loss'], loc='upper left')
 # write the plt to a results folder
 # make the results folder if needed
 plt.savefig("results/loss.png")
+
 print("hello pippin")

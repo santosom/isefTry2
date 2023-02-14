@@ -4,10 +4,13 @@ import tensorflow as tf
 
 
 fileCount = 0
+classesCount = 0
+
 for folder in os.listdir("final_spectrograms"):
     # skip any file that is not a folder
     if not os.path.isdir("final_spectrograms/" + folder):
         continue
+    classesCount += 1
     for file in os.listdir("final_spectrograms/" + folder):
         # skip any file that is not a png
         if not file.endswith(".png"):
@@ -26,6 +29,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     seed=1337,
     image_size=image_size,
     batch_size=batch_size,
+    color_mode="grayscale",
 )
 
 val_ds = tf.keras.utils.image_dataset_from_directory(
@@ -35,6 +39,7 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     seed=1337,
     image_size=image_size,
     batch_size=batch_size,
+    color_mode="grayscale",
 )
 
 # print ("test data: ")

@@ -39,3 +39,9 @@ keras_model:
 
 pydot:
 	pip install pydot
+
+smalldataset:
+	python3 small_dataset.py
+
+restoredataset:
+	git checkout final_spectrograms 

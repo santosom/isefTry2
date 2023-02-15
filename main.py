@@ -55,22 +55,18 @@ model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
-model.add(Conv2D(32, (3, 3), padding="same", activation="relu"))
-model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dense(64, activation="relu"))
 model.add(Flatten())
 model.add(Dense(32, activation="relu"))
 model.add(Dense(constants.classesCount,  activation = 'softmax'))
 model.summary()
 print("model layers defined")
-optimizer = keras.optimizers.Adam(learning_rate=0.01)
+optimizer = keras.optimizers.SGD(learning_rate=.00001)
 print("model layers optimizer defined")
 model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
 print("model successfully complied")
 
-m = model.fit(train_ds, batch_size = 3, epochs = 4, verbose = 1, validation_data = val_ds)
+m = model.fit(train_ds, batch_size = 32, epochs = 100, verbose = 1, validation_data = val_ds)
 
 # #TODO: make sure input shape is correct
 if not os.path.exists("results"):

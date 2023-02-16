@@ -34,6 +34,11 @@ train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     color_mode="grayscale",
 )
 
+#testing split from https://stackoverflow.com/questions/66036271/splitting-a-tensorflow-dataset-into-training-test-and-validation-sets-from-ker
+val_batches = tf.data.experimental.cardinality(val_ds)
+test_ds = val_ds.take((2*val_batches) // 3)
+val_ds = val_ds.skip((2*val_batches) // 3)
+
 # for images, labels in train_ds.take(1):
 #     print (labels)
 #     print (images)

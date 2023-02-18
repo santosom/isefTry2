@@ -2,7 +2,7 @@
 # saving it into the final_spectrograms folder
 import os
 
-from PIL import Image
+import lib
 
 outputfolder = "final_spectrograms"
 
@@ -16,19 +16,6 @@ for folder in os.listdir("spectrograms"):
         # skip any file that is not a png
         if not file.endswith(".png"):
             continue
-        # open the file
-        img = Image.open("spectrograms/" + folder + "/" + file)
-        # crop the image
-        img = img.crop((175, 60, 1040, 445))
-        # ensure the output folder exists
         if not os.path.exists(outputfolder + "/" + folder):
             os.makedirs(outputfolder + "/" + folder)
-        # save the image
-        # reduce the number of colors in the image to 256
-        img = img.quantize(256)
-        # use grayscale
-        img = img.convert('L')
-        img.save(outputfolder + "/" + folder + "/" + file)
-        # print out the file name
-        print(folder + "/" + file)
-
+        lib.post_process_spectrogram("spectrograms/" + folder + "/" + file, outputfolder + "/" + folder + "/" + file)

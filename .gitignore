@@ -165,3 +165,4 @@ spectrograms/.DS_Store
 .idea
 
 results/model.h5
+tmp

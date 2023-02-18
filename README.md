@@ -1,4 +1,4 @@
-Commands to commit source code:
+**Commands to commit source code:
 ```
 git status .
 git add -A .
@@ -13,3 +13,9 @@ Add to your path
 Run git-lfs install
 git lfs track audio
 
+# Process to classify
+
+* Save the audio file
+* Make a spectrogram
+* Post-process the spectrogram to grayscale, reduced colors and cropped
+* Classify with the the saved model**

@@ -1,5 +1,7 @@
+import os
 import sys
 import lib
+import tensorflow
 from tensorflow import keras
 import numpy as np
 
@@ -29,11 +31,18 @@ lib.post_process_spectrogram(spectrogram_file, post_processed_spectrogram)
 reconstructed_model = keras.models.load_model('results/model.h5')
 print("Loaded model from disk")
 print(reconstructed_model.summary())
+# list all folders in the "spectrograms" folder
+labels = os.listdir('audio')
 
-# np.testing.assert_allclose(
-#     reconstructed_model.predict(test_input), reconstructed_model.predict(test_input)
-# )
-#
-# # The reconstructed model is already compiled and has retained the optimizer
-# # state, so training can resume:
-# reconstructed_model.fit(test_input, test_target)
+img = tensorflow.io.read_file(post_processed_spectrogram)
+img = tensorflow.image.decode_png(img, channels=1)
+img.set_shape([None, None, 1])
+img = tensorflow.image.resize(img, (865, 385))
+# sess = keras.backend.clear_session
+# img = img.eval(session=sess) # convert to numpy array
+img = np.expand_dims(img, 0) # make 'batch' of 1
+
+pred = reconstructed_model.predict(img)
+
+for i in range(len(pred[0])):
+    print (labels[i] + ": " + str(pred[0][i]))

@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import lib
 import tensorflow
@@ -12,6 +13,13 @@ import numpy as np
 # * Classify with the the saved model**
 
 tmpAudioFile = sys.argv[1]
+
+# get the filename after the last /
+filename_part = tmpAudioFile.split('/')[-1]
+tmpAudioFile = 'tmp/' + filename_part
+# copy the file to the tmp folder
+print("Copied " + sys.argv[1] + " to " + tmpAudioFile)
+shutil.copyfileobj(open(sys.argv[1], 'rb'), open(tmpAudioFile, 'wb'))
 
 # generate the spectrogram
 # save the spectrogram
@@ -33,6 +41,8 @@ print("Loaded model from disk")
 print(reconstructed_model.summary())
 # list all folders in the "spectrograms" folder
 labels = os.listdir('audio')
+# sort the labels alphabetically
+labels.sort()
 
 img = tensorflow.io.read_file(post_processed_spectrogram)
 img = tensorflow.image.decode_png(img, channels=1)
@@ -44,5 +54,10 @@ img = np.expand_dims(img, 0) # make 'batch' of 1
 
 pred = reconstructed_model.predict(img)
 
+lines = []
 for i in range(len(pred[0])):
-    print (labels[i] + ": " + str(pred[0][i]))
+    lines = lines + [str(pred[0][i]) + ' : ' + labels[i]]
+
+lines.sort(reverse=True)
+for line in lines:
+    print(line)

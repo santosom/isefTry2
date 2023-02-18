@@ -26,7 +26,7 @@ print("hello mushy")
 train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     "final_spectrograms",
     label_mode="categorical",
-    validation_split=0.2,
+    validation_split=0.3,
     subset="both",
     seed=1337,
     image_size=image_size,
@@ -34,7 +34,7 @@ train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
     color_mode="grayscale",
 )
 
-#testing split from https://stackoverflow.com/questions/66036271/splitting-a-tensorflow-dataset-into-training-test-and-validation-sets-from-ker
+# #testing split from https://stackoverflow.com/questions/66036271/splitting-a-tensorflow-dataset-into-training-test-and-validation-sets-from-ker
 val_batches = tf.data.experimental.cardinality(val_ds)
 test_ds = val_ds.take((2*val_batches) // 3)
 val_ds = val_ds.skip((2*val_batches) // 3)
@@ -65,13 +65,17 @@ model.add(Flatten())
 model.add(Dense(32, activation="relu"))
 model.add(Dense(constants.classesCount,  activation = 'softmax'))
 model.summary()
-print("model layers defined")
+
 optimizer = keras.optimizers.SGD(learning_rate=.00001)
-print("model layers optimizer defined")
-model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy']) #change to categorical_crossentropy
-print("model successfully complied")
+
+score = model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy', tf.keras.metrics.Recall(), tf.keras.metrics.Precision()]) #change to categorical_crossentropy
 
 m = model.fit(train_ds, batch_size = 32, epochs = 100, verbose = 1, validation_data = val_ds)
+score = model.evaluate(test_ds, verbose=0)
+print("test loss:" + score[0])
+print("test accuracy:" + score[1])
+print("test recall:" + score[2])
+print("test precision:" + score[3])
 
 # #TODO: make sure input shape is correct
 if not os.path.exists("results"):

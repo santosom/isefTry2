@@ -64,13 +64,13 @@ print ("done")
 def entireLen():
     return fileCount
 
-#ratios
-#https://stackoverflow.com/questions/51125266/how-do-i-split-tensorflow-datasets
-trainingLen = round(entireLen()*.7)
-validationLen = round(entireLen()*.15)
-testingLen = round(entireLen()*.15)
-
-# print out training, validation and testing
-print ("training: ", trainingLen)
-print ("validation: ", validationLen)
-print ("testing: ", testingLen)
+# #ratios
+# #https://stackoverflow.com/questions/51125266/how-do-i-split-tensorflow-datasets
+# trainingLen = round(entireLen()*.7)
+# validationLen = round(entireLen()*.15)
+# testingLen = round(entireLen()*.15)
+#
+# # print out training, validation and testing
+# print ("training: ", trainingLen)
+# print ("validation: ", validationLen)
+# print ("testing: ", testingLen)

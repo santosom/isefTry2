@@ -10,7 +10,6 @@ from keras.optimizers import SGD
 
 import pandas as pd
 import numpy as np
-import librosa
 from pathlib import Path
 from scipy.io import wavfile
 from sklearn.model_selection import KFold
@@ -70,12 +69,12 @@ optimizer = keras.optimizers.SGD(learning_rate=.00001)
 
 score = model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy', tf.keras.metrics.Recall(), tf.keras.metrics.Precision()]) #change to categorical_crossentropy
 
-m = model.fit(train_ds, batch_size = 32, epochs = 100, verbose = 1, validation_data = val_ds)
+m = model.fit(train_ds, batch_size = 32, epochs = 75, verbose = 1, validation_data = val_ds)
 score = model.evaluate(test_ds, verbose=0)
-print("test loss:" + score[0])
-print("test accuracy:" + score[1])
-print("test recall:" + score[2])
-print("test precision:" + score[3])
+print("test loss:", score[0])
+print("test accuracy:", score[1])
+print("test recall:", score[2])
+print("test precision:", score[3])
 
 # #TODO: make sure input shape is correct
 if not os.path.exists("results"):

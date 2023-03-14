@@ -14,4 +14,4 @@ ipywidgets
 keras
 data
 pydot
-
+pyaudio

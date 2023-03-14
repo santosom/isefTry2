@@ -47,6 +47,11 @@ def minMaxNormalize(arr):
     mx = np.max(arr)
     return (arr-mn)/(mx-mn)
 
+class result:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
 def predictSound(X):
     # Save the audio file as a wav file
     write(WAVE_OUTPUT_FILENAME, 44100, X)
@@ -69,11 +74,14 @@ def predictSound(X):
     img = np.expand_dims(img, 0)  # make 'batch' of 1
     pred = reconstructed_model.predict(img)
     lines = []
+    # sort the predictions from highest to lowest
     for i in range(len(pred[0])):
-        lines = lines + [str(pred[0][i]) + ' : ' + labels[i]]
-    lines.sort(reverse=True)
-    for line in lines:
-        print(line)
+        lines += [result(labels[i], pred[0][i])]
+        # lines = lines + [str(pred[0][i]) + ' : ' + labels[i]]
+    new_list = sorted(lines, key=lambda x: x.score, reverse=True)
+    # lines.sort(reverse=True)
+    for line in new_list:
+        print(line.score, line.name)
     exit(0)
 
 # def predictSound(X):
@@ -90,7 +98,6 @@ def predictSound(X):
 
 CHUNKSIZE = 22050  # fixed chunk size
 RATE = 44100
-RECORD_SECONDS = 5
 CHANNELS=1
 FORMAT = pyaudio.paInt16
 
@@ -103,12 +110,13 @@ print("Generating noise sample (please be quiet)...")
 data = stream.read(10000, exception_on_overflow=False)
 noise_sample = np.frombuffer(data, dtype=np.float32)
 plotAudio2(noise_sample)
-loud_threshold = np.mean(np.abs(noise_sample)) * 10
-print("Loud threshold", loud_threshold)
+background_noise_threshold = np.mean(np.abs(noise_sample)) * 10
+print("Loud threshold", background_noise_threshold)
 audio_buffer = []
 near = 0
 
 print ("recording...")
+IsRecording = False
 while (True):
     # Read chunk and load it into numpy array.
     data = stream.read(CHUNKSIZE, exception_on_overflow=False)
@@ -117,26 +125,31 @@ while (True):
     # Reduce noise real-time
     current_window = nr.reduce_noise(y=current_window, y_noise=noise_sample, sr=RATE)
     # current_window = nr.reduce_noise(audio_clip=current_window, noise_clip=noise_sample, verbose=False)
-    print ("Current window")
 
-    if (audio_buffer == []):
-        print ("Audio buffer is empty")
-        audio_buffer = current_window
+    # print is recording flag
+    if (IsRecording == True):
+        print("Recording")
     else:
-        print ("Audio buffer is not empty, taking a look")
-        if (np.mean(np.abs(current_window)) < loud_threshold):
-            print("Inside silence reign")
-            if (near < 10):
-                audio_buffer = np.concatenate((audio_buffer, current_window))
-                near += 1
-            else:
-                predictSound(np.array(audio_buffer))
-                audio_buffer = []
-                near
+        print("Not recording")
+
+    if (IsRecording == False):
+        loudness = np.mean(np.abs(current_window)) * 10
+        print ("Loud threshold ", background_noise_threshold, " ", loudness)
+        if (loudness >= background_noise_threshold):
+            print("Silence reign")
         else:
-            print("Inside loud reign")
-            near = 0
+            print("Heard something, starting to capture")
+            IsRecording = True
+
+    if (IsRecording == True):
+        if (near < 10):
             audio_buffer = np.concatenate((audio_buffer, current_window))
+            near += 1
+        else:
+            predictSound(np.array(audio_buffer))
+            audio_buffer = []
+            IsRecording = False
+            near
 
 # close stream
 stream.stop_stream()

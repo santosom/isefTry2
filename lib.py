@@ -28,3 +28,10 @@ def post_process_spectrogram(file, target):
     img = img.convert('L')
     img.save(target)
     print ("Saved " + target)
+
+
+class result:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+

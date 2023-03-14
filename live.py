@@ -14,14 +14,16 @@ import pyaudio
 import lib
 import tensorflow
 from tensorflow import keras
+from lib import result
 
 # Load the model
 reconstructed_model = keras.models.load_model('results/model.h5')
 print("Loaded model from disk")
 print(reconstructed_model.summary())
-# list all folders in the "spectrograms" folder
+
+# get the labels from the model
 labels = os.listdir('audio')
-# sort the labels alphabetically
+labels.remove('.DS_Store')
 labels.sort()
 
 WAVE_OUTPUT_FILENAME = "test.wav"
@@ -33,24 +35,19 @@ def plotAudio(output):
     plt.plot(output, color='blue')
     ax.set_xlim((0, len(output)))
     ax.margins(2, -0.1)
-    plt.show()
+    # plt.show()
 
 # Plot audio
 def plotAudio2(output):
     fig, ax = plt.subplots(nrows=1,ncols=1, figsize=(20,4))
     plt.plot(output, color='blue')
     ax.set_xlim((0, len(output)))
-    # plt.show()
+    plt.show()
 
 def minMaxNormalize(arr):
     mn = np.min(arr)
     mx = np.max(arr)
     return (arr-mn)/(mx-mn)
-
-class result:
-    def __init__(self, name, score):
-        self.name = name
-        self.score = score
 
 def predictSound(X):
     # Save the audio file as a wav file
@@ -74,12 +71,9 @@ def predictSound(X):
     img = np.expand_dims(img, 0)  # make 'batch' of 1
     pred = reconstructed_model.predict(img)
     lines = []
-    # sort the predictions from highest to lowest
     for i in range(len(pred[0])):
         lines += [result(labels[i], pred[0][i])]
-        # lines = lines + [str(pred[0][i]) + ' : ' + labels[i]]
     new_list = sorted(lines, key=lambda x: x.score, reverse=True)
-    # lines.sort(reverse=True)
     for line in new_list:
         print(line.score, line.name)
     exit(0)
@@ -109,7 +103,7 @@ stream = p.open(format=pyaudio.paFloat32, channels=CHANNELS, rate=RATE, input=Tr
 print("Generating noise sample (please be quiet)...")
 data = stream.read(10000, exception_on_overflow=False)
 noise_sample = np.frombuffer(data, dtype=np.float32)
-plotAudio2(noise_sample)
+# plotAudio2(noise_sample)
 background_noise_threshold = np.mean(np.abs(noise_sample)) * 10
 print("Loud threshold", background_noise_threshold)
 audio_buffer = []
@@ -123,25 +117,17 @@ while (True):
     current_window = np.frombuffer(data, dtype=np.float32)
 
     # Reduce noise real-time
-    current_window = nr.reduce_noise(y=current_window, y_noise=noise_sample, sr=RATE)
-    # current_window = nr.reduce_noise(audio_clip=current_window, noise_clip=noise_sample, verbose=False)
-
-    # print is recording flag
-    if (IsRecording == True):
-        print("Recording")
-    else:
-        print("Not recording")
+    # current_window = nr.reduce_noise(y=current_window, y_noise=noise_sample, sr=RATE)
 
     if (IsRecording == False):
         loudness = np.mean(np.abs(current_window)) * 10
-        print ("Loud threshold ", background_noise_threshold, " ", loudness)
-        if (loudness >= background_noise_threshold):
-            print("Silence reign")
-        else:
+        if (loudness > background_noise_threshold):
             print("Heard something, starting to capture")
             IsRecording = True
-
-    if (IsRecording == True):
+        else:
+            print("Nothing heard, continuing")
+            continue
+    else:
         if (near < 10):
             audio_buffer = np.concatenate((audio_buffer, current_window))
             near += 1
@@ -149,7 +135,7 @@ while (True):
             predictSound(np.array(audio_buffer))
             audio_buffer = []
             IsRecording = False
-            near
+            near = 0
 
 # close stream
 stream.stop_stream()

@@ -1,6 +1,7 @@
 import os
 import sys
 import lib
+from lib import result
 import tensorflow
 from tensorflow import keras
 import numpy as np
@@ -33,6 +34,8 @@ print("Loaded model from disk")
 print(reconstructed_model.summary())
 # list all folders in the "spectrograms" folder
 labels = os.listdir('audio')
+labels.remove('.DS_Store')
+labels.sort()
 
 img = tensorflow.io.read_file(post_processed_spectrogram)
 img = tensorflow.image.decode_png(img, channels=1)
@@ -44,5 +47,9 @@ img = np.expand_dims(img, 0) # make 'batch' of 1
 
 pred = reconstructed_model.predict(img)
 
+lines = []
 for i in range(len(pred[0])):
-    print (labels[i] + ": " + str(pred[0][i]))
+    lines += [result(labels[i], pred[0][i])]
+new_list = sorted(lines, key=lambda x: x.score, reverse=True)
+for line in new_list:
+    print(line.score, line.name)

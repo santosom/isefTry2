@@ -166,3 +166,9 @@ spectrograms/.DS_Store
 
 results/model.h5
 tmp
+
+test.wav
+test_backup.wav
+test_post_processed_spectrogram.png
+test_spectrogram.png
+

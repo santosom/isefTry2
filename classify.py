@@ -13,7 +13,8 @@ import numpy as np
 
 tmpAudioFile = sys.argv[1]
 
-# generate the spectrogram & save the spectrogram
+# generate the spectrogram
+# save the spectrogram
 plt = lib.create_spectrogram(tmpAudioFile)
 spectrogram_file = tmpAudioFile
 spectrogram_file = spectrogram_file.split('.')[0]
@@ -37,6 +38,8 @@ img = tensorflow.io.read_file(post_processed_spectrogram)
 img = tensorflow.image.decode_png(img, channels=1)
 img.set_shape([None, None, 1])
 img = tensorflow.image.resize(img, (865, 385))
+# sess = keras.backend.clear_session
+# img = img.eval(session=sess) # convert to numpy array
 img = np.expand_dims(img, 0) # make 'batch' of 1
 
 pred = reconstructed_model.predict(img)

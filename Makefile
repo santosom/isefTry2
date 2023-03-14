@@ -45,3 +45,10 @@ smalldataset:
 
 restoredataset:
 	git checkout final_spectrograms 
+
+live:
+	python3 live.py
+
+play:
+	afplay test.wav
+
